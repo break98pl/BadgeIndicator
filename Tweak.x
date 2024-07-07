@@ -17,6 +17,7 @@
       SBIcon *icon = [((SBIconController *)[objc_getClass("SBIconController") sharedInstance]).model applicationIconForBundleIdentifier:self.bundleIdentifier];
       if(self.processState.foreground){
         [icon setOverrideBadgeNumberOrString:foregroundIcon];
+        // kIsInFolder [SBIconView.location isEqualToString:@"SBIconLocationFolder"] && ![SBIconView.location isEqualToString:@"SBIconLocationAppLibraryCategoryPodExpanded"] && ![SBIconView.location isEqualToString:@"SBIconLocationRoot"]
       }
       else if(self.processState.running){
         [icon setOverrideBadgeNumberOrString:backgroundIcon];

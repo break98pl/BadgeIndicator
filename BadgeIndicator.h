@@ -6,6 +6,12 @@
 -(id)badgeValue;
 @end
 
+@interface SBIconViewMap : NSObject 
+-(id)mappedIconViewForIcon:(id)arg1;
+- (id)iconViewForIcon:(id)arg1;
+- (id)_iconViewForIcon:(id)arg1;
+@end
+
 @interface SBApplicationProcessState : NSObject
 @property (getter=isRunning, nonatomic, readonly) BOOL running;
 @property (getter=isForeground, nonatomic, readonly) BOOL foreground;
@@ -47,6 +53,7 @@
 
 @interface SBIconListView : UIView
 -(void)updateRunningIndicators:(NSNotification *)notification;
+-(SBIconViewMap *)viewMap;
 @end
 
 @interface SBHIconModel : NSObject
@@ -61,12 +68,7 @@
 -(id)applicationIconForDisplayIdentifier:(id)arg1 ;
 -(id)leafIconForIdentifier:(id)arg1 ;
 +(id)homescreenMap;
-@end
-
-@interface SBIconViewMap : NSObject 
--(id)mappedIconViewForIcon:(id)arg1;
-- (id)iconViewForIcon:(id)arg1;
-- (id)_iconViewForIcon:(id)arg1;
+-(SBIcon *)rootFolderIcon;
 @end
 
 @interface SBRootIconListView : SBIconListView
