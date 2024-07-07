@@ -35,33 +35,30 @@
 
 %hook SBIconImageView
 
-%property (nonatomic, retain) UISwipeGestureRecognizer *adSwipeGestureRecognizer;
+%property (nonatomic, retain) UISwipeGestureRecognizer *swipeGestureRecognizer;
 
 - (SBIconImageView *)initWithFrame:(CGRect)arg1 {
     SBIconImageView *r = %orig;
     if (![r isKindOfClass:NSClassFromString(@"SBFolderIconImageView")]) {
         // Create Gesture Recognizer
-        self.adSwipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:r action:@selector(appDataDidSwipeUp:)];
-        self.adSwipeGestureRecognizer.direction = (UISwipeGestureRecognizerDirectionUp);
+        self.swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:r action:@selector(didSwipeUp:)];
+        self.swipeGestureRecognizer.direction = (UISwipeGestureRecognizerDirectionUp);
         r.userInteractionEnabled = YES;
         
         // Add gesture if enabled
-        [self addGestureRecognizer:self.adSwipeGestureRecognizer];
+        [self addGestureRecognizer:self.swipeGestureRecognizer];
     }
     return r;
 }
 
 %new
-- (void)appDataDidSwipeUp:(UIGestureRecognizer *)gesture {
+- (void)didSwipeUp:(UIGestureRecognizer *)gesture {
     if (gesture.state == UIGestureRecognizerStateEnded) {
-        SBApplication *application = [[objc_getClass("SBApplicationController") sharedInstance] applicationWithDisplayIdentifier:self.bundleIdentifier];
-        NSTask *respring = [[NSTask alloc] init];
-
-        [respring setLaunchPath:@"/usr/bin/killall"];
-
-        [respring setArguments:[NSArray arrayWithObjects:@"-9", @"SpringBoard", nil]];
-
-        [respring launch];
+      dispatch_async(dispatch_get_main_queue(), ^{
+        SBIcon *icon = self.icon;
+        SBMainSwitcherViewController *mainSwitcher = [%c(SBMainSwitcherViewController) sharedInstance];
+        [mainSwitcher _deleteAppLayoutsMatchingBundleIdentifier:icon.applicationBundleID];
+      });
     }
 }
 

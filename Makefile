@@ -10,8 +10,6 @@ include $(THEOS)/makefiles/common.mk
 
 TWEAK_NAME = BadgeIndicator
 BadgeIndicator_FILES = Tweak.x
-BadgeIndicator_LIBRARIES = colorpicker
-BadgeIndicator_EXTRA_FRAMEWORKS += Alderis
 BadgeIndicator_CFLAGS = -fobjc-arc
 
 include $(THEOS_MAKE_PATH)/tweak.mk

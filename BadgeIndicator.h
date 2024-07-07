@@ -80,15 +80,18 @@
 @end
 
 @interface SBIconImageView : UIView
-@property (nonatomic, strong) UISwipeGestureRecognizer *adSwipeGestureRecognizer;
+@property (nonatomic, strong) UISwipeGestureRecognizer *swipeGestureRecognizer;
 - (UIImage *)contentsImage;
 - (void)appDataPreferencesChanged;
--(NSString *)bundleIdentifier;
+-(SBIcon *)icon;
 @end
 
-@interface NSTask : NSObject
-- (id)init;
-- (void)setLaunchPath:(id)arg1;
-- (void)setArguments:(id)arg1;
-- (void)launch;
+@interface SBMainSwitcherViewController: UIViewController
++ (id)sharedInstance;
+- (id)recentAppLayouts;
+-(void)_deleteAppLayoutsMatchingBundleIdentifier:(id)arg1 ;
+@end
+
+@interface SBAppLayout : NSObject
+-(NSDictionary *)rolesToLayoutItemsMap;
 @end
