@@ -1,0 +1,9 @@
+Package: com.trung.badgeindicator
+Name: Badge Indicators
+Depends: mobilesubstrate
+Version: 1.0.0
+Architecture: iphoneos-arm
+Description: Running indicators under apps in the badge...
+Maintainer: Tờ Rung <break98pl@gmail.com>
+Author: Tờ Rung <break98pl@gmail.com>
+Section: Tweaks
