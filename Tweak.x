@@ -9,6 +9,65 @@
 
 #pragma mark - Hooks
 
+%hook SBFolderIcon
+
+-(id)initWithFolder:(id)arg1{
+  if(![arg1 isKindOfClass: %c(SBRootFolderWithDock)]){
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeBadgeFromBundleNotification:) name:@"ApplicationProcessDidKill" object:nil];
+  }
+  return %orig;
+}
+
+%new
+- (void) removeBadgeFromBundleNotification:(NSNotification *) notification{
+  dispatch_async(dispatch_get_main_queue(), ^{
+    for(SBIconListModel *iconListModel in self.folder.lists) {
+      for(SBApplicationIcon *applicationIcon in iconListModel.icons) {
+        SBApplication *application = applicationIcon.application;
+        if(application.processState){
+          if(application.processState.foreground){
+            return;
+          }
+          else if(application.processState.running){
+            return;
+          }
+        }
+      }
+    }
+    [self.folder.icon setOverrideBadgeNumberOrString:@""];
+  });
+}
+
+%end
+
+%hook SBFolder
+-(void)removeFolderObserver:(id)arg1{
+  %orig;
+  dispatch_after(dispatch_time(DISPATCH_TIME_NOW, 0.4 * NSEC_PER_SEC), dispatch_get_main_queue(), ^{
+    SBFloatyFolderController *folderController = arg1;
+    if(!folderController.folder.isOpen){
+      for(SBIconListModel *iconListModel in self.lists) {
+        for(SBApplicationIcon *applicationIcon in iconListModel.icons) {
+          SBApplication *application = applicationIcon.application;
+          if(application.processState){
+            if(application.processState.foreground){
+              [self.icon setOverrideBadgeNumberOrString:foregroundIcon];
+              return;
+            }
+            else if(application.processState.running){
+              [self.icon setOverrideBadgeNumberOrString:backgroundIcon];
+              return;
+            }
+          }
+        }
+      }
+      [self.icon setOverrideBadgeNumberOrString:@""];
+    }
+  });
+}
+
+%end
+
 %hook SBApplication
 -(void)_setInternalProcessState:(id)arg1{ 
   %orig;
@@ -17,7 +76,6 @@
       SBIcon *icon = [((SBIconController *)[objc_getClass("SBIconController") sharedInstance]).model applicationIconForBundleIdentifier:self.bundleIdentifier];
       if(self.processState.foreground){
         [icon setOverrideBadgeNumberOrString:foregroundIcon];
-        // kIsInFolder [SBIconView.location isEqualToString:@"SBIconLocationFolder"] && ![SBIconView.location isEqualToString:@"SBIconLocationAppLibraryCategoryPodExpanded"] && ![SBIconView.location isEqualToString:@"SBIconLocationRoot"]
       }
       else if(self.processState.running){
         [icon setOverrideBadgeNumberOrString:backgroundIcon];
@@ -25,6 +83,7 @@
     }
   });
 }
+
 -(void)_didExitWithContext:(id)arg{
   %orig;
   dispatch_async(dispatch_get_main_queue(), ^{
@@ -32,6 +91,17 @@
     [icon setOverrideBadgeNumberOrString:@0];
   });
 }
+%end
+
+%hook SBMainSwitcherViewController
+- (bool)isMainSwitcherVisible {
+  bool origValue = %orig;
+	if (!origValue) {
+		[[NSNotificationCenter defaultCenter] postNotificationName:@"ApplicationProcessDidKill" object: nil];
+	}
+	return origValue;
+}
+
 %end
 
 %hook SBIconImageView

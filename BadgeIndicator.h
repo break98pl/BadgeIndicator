@@ -6,10 +6,30 @@
 -(id)badgeValue;
 @end
 
+@interface SBFolder : NSObject
+-(NSArray *)lists;
+-(id)listsContainingLeafIconWithIdentifier:(id)arg1 ;
+-(id)folderIcons;
+-(void)setBadge:(NSString *)arg1 ;
+-(SBIcon *)icon;
+-(NSString *)badge;
+-(BOOL)isOpen;
+-(void)removeBadgeFolder;
++(id)sharedInstance;
+@end
+
+@interface SBFolderIcon: SBIcon
+-(SBFolder *)folder;
+@end
+
 @interface SBIconViewMap : NSObject 
 -(id)mappedIconViewForIcon:(id)arg1;
 - (id)iconViewForIcon:(id)arg1;
 - (id)_iconViewForIcon:(id)arg1;
+@end
+
+@interface SBFloatyFolderController : NSObject 
+-(SBFolder *)folder;
 @end
 
 @interface SBApplicationProcessState : NSObject
@@ -17,6 +37,10 @@
 @property (getter=isForeground, nonatomic, readonly) BOOL foreground;
 -(int)taskState;
 -(int)visibility;
+@end
+
+@interface SBIconListModel : NSObject
+-(id)icons;
 @end
 
 @interface SBApplication : NSObject
@@ -54,6 +78,7 @@
 @interface SBIconListView : UIView
 -(void)updateRunningIndicators:(NSNotification *)notification;
 -(SBIconViewMap *)viewMap;
+-(SBIconListModel *)model;
 @end
 
 @interface SBHIconModel : NSObject
