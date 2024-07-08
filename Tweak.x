@@ -64,7 +64,6 @@
 
 -(void)_didExitWithContext:(id)arg{
   %orig;
-  NSLog(@"Trung state quit call %@", self);
   dispatch_async(dispatch_get_main_queue(), ^{
     SBIcon *icon = [((SBIconController *)[objc_getClass("SBIconController") sharedInstance]).model applicationIconForBundleIdentifier:self.bundleIdentifier];
     [icon setOverrideBadgeNumberOrString:@0];
