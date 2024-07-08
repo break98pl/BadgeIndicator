@@ -13,13 +13,13 @@
 
 -(id)initWithFolder:(id)arg1{
   if(![arg1 isKindOfClass: %c(SBRootFolderWithDock)]){
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeBadgeFromBundleNotification:) name:@"ApplicationProcessDidKill" object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(removeBadgeFolderNotification:) name:@"ApplicationProcessDidKill" object:nil];
   }
   return %orig;
 }
 
 %new
-- (void) removeBadgeFromBundleNotification:(NSNotification *) notification{
+- (void) removeBadgeFolderNotification:(NSNotification *) notification{
   dispatch_async(dispatch_get_main_queue(), ^{
     for(SBIconListModel *iconListModel in self.folder.lists) {
       for(SBApplicationIcon *applicationIcon in iconListModel.icons) {
@@ -69,6 +69,10 @@
 %end
 
 %hook SBApplication
+-(void)_noteProcess:(id)arg1 didChangeToState:(id)arg2{
+    %orig;
+  NSLog(@"Trung state %@", self);
+}
 -(void)_setInternalProcessState:(id)arg1{ 
   %orig;
   dispatch_async(dispatch_get_main_queue(), ^{
