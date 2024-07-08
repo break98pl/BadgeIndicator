@@ -89,19 +89,9 @@
   dispatch_async(dispatch_get_main_queue(), ^{
     SBIcon *icon = [((SBIconController *)[objc_getClass("SBIconController") sharedInstance]).model applicationIconForBundleIdentifier:self.bundleIdentifier];
     [icon setOverrideBadgeNumberOrString:@0];
+    [[NSNotificationCenter defaultCenter] postNotificationName:@"ApplicationProcessDidKill" object: nil];
   });
 }
-%end
-
-%hook SBMainSwitcherViewController
-- (bool)isMainSwitcherVisible {
-  bool origValue = %orig;
-	if (!origValue) {
-		[[NSNotificationCenter defaultCenter] postNotificationName:@"ApplicationProcessDidKill" object: nil];
-	}
-	return origValue;
-}
-
 %end
 
 %hook SBIconImageView
