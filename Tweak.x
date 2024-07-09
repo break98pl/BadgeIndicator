@@ -25,11 +25,11 @@
       for(SBApplicationIcon *applicationIcon in iconListModel.icons) {
         SBApplication *application = applicationIcon.application;
         if(application.processState){
-          if(application.processState.taskState == 2 && application.processState.visibility == 2){
+          if(application.processState.visibility == 2){
             [self.folder.icon setOverrideBadgeNumberOrString:foregroundIcon];
             return;
           }
-          else if(application.processState.taskState == 2 && application.processState.visibility == 1){
+          else if(application.processState.visibility == 1){
             [self.folder.icon setOverrideBadgeNumberOrString:backgroundIcon];
             return;
           }
