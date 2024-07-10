@@ -106,8 +106,8 @@
 void loadPrefs() {
     NSUserDefaults *badgeindicator = [[NSUserDefaults alloc] initWithSuiteName:domainString];
     NSDictionary *defaultPrefs = @{
-        @"foregroundIcon": @"▶️",
-        @"backgroundIcon": @"⏸",
+        @"foregroundIcon": @"▶︎",
+        @"backgroundIcon": @"☾",
     };
     [badgeindicator registerDefaults:defaultPrefs];
     foregroundIcon = [badgeindicator stringForKey:@"foregroundIcon"];
