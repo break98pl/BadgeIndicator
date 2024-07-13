@@ -72,36 +72,36 @@
 }
 %end
 
-// %hook SBIconImageView
+%hook SBIconImageView
 
-// %property (nonatomic, retain) UISwipeGestureRecognizer *swipeGestureRecognizer;
+%property (nonatomic, retain) UISwipeGestureRecognizer *swipeGestureRecognizer;
 
-// - (SBIconImageView *)initWithFrame:(CGRect)arg1 {
-//     SBIconImageView *r = %orig;
-//     if (![r isKindOfClass:NSClassFromString(@"SBFolderIconImageView")]) {
-//         // Create Gesture Recognizer
-//         self.swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:r action:@selector(didSwipeUp:)];
-//         self.swipeGestureRecognizer.direction = (UISwipeGestureRecognizerDirectionUp);
-//         r.userInteractionEnabled = YES;
+- (SBIconImageView *)initWithFrame:(CGRect)arg1 {
+    SBIconImageView *r = %orig;
+    if (![r isKindOfClass:NSClassFromString(@"SBFolderIconImageView")]) {
+        // Create Gesture Recognizer
+        self.swipeGestureRecognizer = [[UISwipeGestureRecognizer alloc] initWithTarget:r action:@selector(didSwipeUp:)];
+        self.swipeGestureRecognizer.direction = (UISwipeGestureRecognizerDirectionUp);
+        r.userInteractionEnabled = YES;
         
-//         // Add gesture if enabled
-//         [self addGestureRecognizer:self.swipeGestureRecognizer];
-//     }
-//     return r;
-// }
+        // Add gesture if enabled
+        [self addGestureRecognizer:self.swipeGestureRecognizer];
+    }
+    return r;
+}
 
-// %new
-// - (void)didSwipeUp:(UIGestureRecognizer *)gesture {
-//     if (gesture.state == UIGestureRecognizerStateEnded) {
-//       dispatch_async(dispatch_get_main_queue(), ^{
-//         SBIcon *icon = self.icon;
-//         SBMainSwitcherViewController *mainSwitcher = [%c(SBMainSwitcherViewController) sharedInstance];
-//         [mainSwitcher _deleteAppLayoutsMatchingBundleIdentifier:icon.applicationBundleID];
-//       });
-//     }
-// }
+%new
+- (void)didSwipeUp:(UIGestureRecognizer *)gesture {
+    if (gesture.state == UIGestureRecognizerStateEnded) {
+      dispatch_async(dispatch_get_main_queue(), ^{
+        SBIcon *icon = self.icon;
+        SBMainSwitcherViewController *mainSwitcher = [%c(SBMainSwitcherViewController) sharedInstance];
+        [mainSwitcher _deleteAppLayoutsMatchingBundleIdentifier:icon.applicationBundleID];
+      });
+    }
+}
 
-// %end
+%end
 
 %hook SBIconView
 %property (nonatomic, retain) UIView *runningIndicator;
