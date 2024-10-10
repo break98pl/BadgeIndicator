@@ -111,6 +111,11 @@
 - (UIImage *)contentsImage;
 - (void)appDataPreferencesChanged;
 -(SBIcon *)icon;
+@property (assign,nonatomic) SBIconView * iconView;
+@property (nonatomic, retain) UIView *badgeView; // new
+@property (nonatomic, retain) UILabel *timeLeftLabel; // new
+- (void)setupBadgeView ; // new
+- (void)updateBadgeView:(id)arg1 ; // new
 @end
 
 @interface SBMainSwitcherViewController: UIViewController
